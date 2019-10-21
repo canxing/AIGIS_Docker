@@ -15,7 +15,7 @@ ENV PATH=/miniconda/bin:${PATH}
 
 WORKDIR /home/supermap
 
-COPY requirements-conda-cpu.yml ./
+COPY requirements-conda-gpu.yml ./
 
 RUN conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/ && \
   conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/ && \
