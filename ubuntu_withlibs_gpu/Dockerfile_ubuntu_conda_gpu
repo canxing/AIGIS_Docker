@@ -16,6 +16,9 @@ RUN rm /etc/apt/sources.list.d/* && \
   bash Miniconda3-latest-Linux-x86_64.sh -p /miniconda -b && \
   rm Miniconda3-latest-Linux-x86_64.sh
 
+ADD hasplm.ini /etc/hasplm/hasplm.ini
+ADD init.sh /opt/init.sh
+
 RUN curl http://imanager-tool.oss-cn-beijing.aliyuncs.com/oracle_instant_client_11.2.04.tar.gz -o /tmp/oracle_instant_client.tar.gz && \
   curl http://imanager-tool.oss-cn-beijing.aliyuncs.com/aksusbd-2.4.1-i386.tar -o /tmp/aksusbd.tar && \
   tar -xvf /tmp/aksusbd.tar -C /opt && \
@@ -34,9 +37,6 @@ ENV PATH $PATH:/etc/oracle_instant_client
 ENV TNS_ADMIN $ORACLE_HOME/network/admin
 ENV LANG=zh_CN.utf8
 RUN export LANG=$LANG
-
-ADD hasplm.ini /etc/hasplm/hasplm.ini
-ADD init.sh /opt/init.sh
 
 RUN mkdir -p $LICENSE_DIR
 
