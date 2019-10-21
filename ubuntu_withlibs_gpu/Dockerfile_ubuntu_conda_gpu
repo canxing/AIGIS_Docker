@@ -20,5 +20,5 @@ COPY requirements-conda-gpu.yml ./
 RUN conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/ && \
   conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/ && \
   conda config --set show_channel_urls yes && \
-  conda env update -n base -f requirements-conda-cpu.yml && \
+  conda env update -n base -f requirements-conda-gpu.yml && \
   conda clean --all -f -y
