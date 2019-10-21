@@ -1,3 +1,4 @@
+name: iobjectspy-gpu
 channels:
   - anaconda
   - conda-forge
