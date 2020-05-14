@@ -1,13 +1,12 @@
 name: iobjectspy-cpu
 channels:
-  - conda-forge
   - anaconda
+  - conda-forge
   - defaults
 dependencies:
     - numpy=1.17.2
     - pandas=0.23.3
     - pandas-datareader=0.6.0
-    - matplotlib=3.1.0
     - py4j=0.10.7
     - PyYAML=5.1
     - tensorflow-mkl=1.12.0
@@ -25,6 +24,10 @@ dependencies:
     - pip=19.2.3
     - pip:
         - opencv-python==4.1.1.26
+        - matplotlib==3.1.0
         - dotmap==1.3.8 
         - crfpy
-        - rasterio
+        - geoai-gdal
+        - geoai-rasterio
+        
+
