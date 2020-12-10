@@ -11,10 +11,7 @@ RUN rm /etc/apt/sources.list.d/* && \
   apt-get install -y vim-gtk && \
   apt-get install -y mysql-client mongodb-clients && \
   apt-get clean && apt-get autoclean && \
-  rm -rf /var/lib/apt/lists/* && \
-  curl -LO http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-  bash Miniconda3-latest-Linux-x86_64.sh -p /miniconda -b && \
-  rm Miniconda3-latest-Linux-x86_64.sh
+  rm -rf /var/lib/apt/lists/*
 
 ADD hasplm.ini /etc/hasplm/hasplm.ini
 ADD init.sh /opt/init.sh
@@ -23,12 +20,14 @@ RUN curl http://imanager-tool.oss-cn-beijing.aliyuncs.com/oracle_instant_client_
   curl http://imanager-tool.oss-cn-beijing.aliyuncs.com/aksusbd-2.4.1-i386.tar -o /tmp/aksusbd.tar && \
   tar -xvf /tmp/aksusbd.tar -C /opt && \
   tar -zxvf /tmp/oracle_instant_client.tar.gz -C /etc && \
+  chown supermap:supermap -R /opt/aksusbd* /etc/oracle_instant_client && \
   ln -s /opt/aksusbd* /opt/aksusbd && \
   chmod +x /opt/init.sh && \
   rm -f /tmp/aksusbd.tar /tmp/oracle_instant_client.tar.gz
 
-RUN ln -s /etc/oracle_instant_client/network/admin/tnsnames.ora /opt/tnsnames.ora \
-  && ln -s /etc/oracle_instant_client/libclntsh.so.*.1 /etc/oracle_instant_client/libclntsh.so.10.1
+RUN ln -s /etc/oracle_instant_client/network/admin/tnsnames.ora /opt/tnsnames.ora && \
+  ln -s /etc/oracle_instant_client/libclntsh.so.*.1 /etc/oracle_instant_client/libclntsh.so.10.1 && \
+  chown supermap:supermap /opt/tnsnames.ora /etc/oracle_instant_client/libclntsh.so.10.1
 
 ENV LICENSE_DIR=/opt/SuperMap/License
 ENV ORACLE_HOME /etc/oracle_instant_client
@@ -38,11 +37,24 @@ ENV TNS_ADMIN $ORACLE_HOME/network/admin
 ENV LANG=zh_CN.utf8
 RUN export LANG=$LANG
 
-RUN mkdir -p $LICENSE_DIR
+RUN mkdir -p $LICENSE_DIR && chown supermap:supermap -R $LICENSE_DIR
 
-ENV PATH=/miniconda/bin:${PATH}
-# RUN conda update -y conda
+RUN useradd supermap -p supermap -U && \
+    mkdir /home/supermap && \
+    chown supermap:supermap -R /home/supermap && \
+    chmod +w /etc/sudoers && \
+    echo 'supermap ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
+    chown -w /etc/sudoers
+USER supermap
+
 WORKDIR /home/supermap
+
+RUN curl -LO http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+  bash Miniconda3-latest-Linux-x86_64.sh -p /home/supermap/miniconda -b && \
+  rm Miniconda3-latest-Linux-x86_64.sh
+
+ENV PATH=/home/supermap/miniconda/bin:${PATH}
+# RUN conda update -y conda
 
 COPY requirements-conda-gpu.yml ./
 

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 [[ -z "$LICENSE_SERVER" ]] && LICENSE_SERVER="localhost"
-sed -i "s/{serveraddr}/$LICENSE_SERVER/g" /etc/hasplm/hasplm.ini
+sudo sed -i "s/{serveraddr}/$LICENSE_SERVER/g" /etc/hasplm/hasplm.ini
 
 cd /opt/aksusbd
 ./dunst
