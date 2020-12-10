@@ -16,6 +16,13 @@ RUN rm /etc/apt/sources.list.d/* && \
 ADD hasplm.ini /etc/hasplm/hasplm.ini
 ADD init.sh /opt/init.sh
 
+RUN useradd supermap -p supermap -U && \
+    mkdir /home/supermap && \
+    chown supermap:supermap -R /home/supermap && \
+    chmod +w /etc/sudoers && \
+    echo 'supermap ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
+    chmod -w /etc/sudoers
+
 RUN curl http://imanager-tool.oss-cn-beijing.aliyuncs.com/oracle_instant_client_11.2.04.tar.gz -o /tmp/oracle_instant_client.tar.gz && \
   curl http://imanager-tool.oss-cn-beijing.aliyuncs.com/aksusbd-2.4.1-i386.tar -o /tmp/aksusbd.tar && \
   tar -xvf /tmp/aksusbd.tar -C /opt && \
@@ -39,12 +46,6 @@ RUN export LANG=$LANG
 
 RUN mkdir -p $LICENSE_DIR && chown supermap:supermap -R $LICENSE_DIR
 
-RUN useradd supermap -p supermap -U && \
-    mkdir /home/supermap && \
-    chown supermap:supermap -R /home/supermap && \
-    chmod +w /etc/sudoers && \
-    echo 'supermap ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-    chmod -w /etc/sudoers
 USER supermap
 
 WORKDIR /home/supermap
